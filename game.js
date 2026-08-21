@@ -5,39 +5,58 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+// The order matters: each weapon beats the next 7 weapons.
+// CHAOS MODE 2: supernatural warfare
 const choices = [
   "rock",
-  "scissors",
-  "sword",
-  "gun",
   "paper",
-  "magic",
-  "shield",
+  "scissors",
+  "laser",
+  "zombie",
+  "vampire",
+  "werewolf",
+  "ghost",
+  "alien",
+  "robot",
+  "meteor",
 ];
 
 const emojis = {
   rock: "🪨",
   paper: "📄",
   scissors: "✂️",
-  sword: "⚔️",
-  gun: "🔫",
-  shield: "🛡️",
-  magic: "🔮",
+  laser: "🔴",
+  zombie: "🧟",
+  vampire: "🧛",
+  werewolf: "🐺",
+  ghost: "👻",
+  alien: "👽",
+  robot: "🤖",
+  meteor: "☄️",
 };
 
-// Each weapon beats exactly 3 others.
-const beats = {
-  rock: ["scissors", "sword", "gun"],
-  scissors: ["sword", "gun", "paper"],
-  sword: ["gun", "paper", "magic"],
-  gun: ["paper", "magic", "shield"],
-  paper: ["magic", "shield", "rock"],
-  magic: ["shield", "rock", "scissors"],
-  shield: ["rock", "scissors", "sword"],
-};
+// Automatically creates balanced rules.
+// With 15 weapons, every weapon beats exactly 7 others.
+function createBattleRules() {
+  const battleRules = {};
+  const weaponsDefeated = Math.floor(choices.length / 2);
 
-let playerHealth = 100;
-let computerHealth = 100;
+  for (let i = 0; i < choices.length; i++) {
+    battleRules[choices[i]] = [];
+
+    for (let j = 1; j <= weaponsDefeated; j++) {
+      const defeatedWeapon = choices[(i + j) % choices.length];
+      battleRules[choices[i]].push(defeatedWeapon);
+    }
+  }
+
+  return battleRules;
+}
+
+const beats = createBattleRules();
+
+let playerHealth = 150;
+let computerHealth = 150;
 let round = 1;
 
 function getComputerChoice() {
@@ -59,7 +78,6 @@ function getWinner(player, computer) {
 
 function getDamage() {
   let damage = Math.floor(Math.random() * 16) + 20;
-
   const criticalHit = Math.random() < 0.15;
 
   if (criticalHit) {
@@ -73,17 +91,29 @@ function getDamage() {
 }
 
 function showRules() {
-  console.log("\n====== CHAOS MODE RULES ======\n");
+  console.log("\n====== CHAOS MODE 1 RULES ======\n");
 
   for (const choice of choices) {
     const defeated = beats[choice]
       .map((item) => `${emojis[item]} ${item}`)
       .join(", ");
 
-    console.log(`${emojis[choice]} ${choice} beats: ${defeated}`);
+    console.log(
+      `${emojis[choice]} ${choice.toUpperCase()} beats: ${defeated}`
+    );
   }
 
-  console.log("\n==============================\n");
+  console.log("\n================================\n");
+}
+
+function showWeapons() {
+  console.log("\n====== AVAILABLE WEAPONS ======\n");
+
+  choices.forEach((choice, index) => {
+    console.log(`${index + 1}. ${emojis[choice]} ${choice.toUpperCase()}`);
+  });
+
+  console.log("\n===============================\n");
 }
 
 function showHealth() {
@@ -96,12 +126,18 @@ function playRound() {
   console.log(`\n========== ROUND ${round} ==========`);
 
   rl.question(
-    "\nChoose rock, paper, scissors, sword, gun, shield, or magic\n> ",
+    "\nChoose a weapon, or type weapons, rules, or quit\n> ",
     (answer) => {
       const playerChoice = answer.toLowerCase().trim();
 
       if (playerChoice === "rules") {
         showRules();
+        playRound();
+        return;
+      }
+
+      if (playerChoice === "weapons") {
+        showWeapons();
         playRound();
         return;
       }
@@ -114,7 +150,7 @@ function playRound() {
 
       if (!choices.includes(playerChoice)) {
         console.log("\n❌ Invalid weapon.");
-        console.log("Type 'rules' to see your options.");
+        console.log("Type 'weapons' to see all available weapons.");
         playRound();
         return;
       }
@@ -141,7 +177,8 @@ function playRound() {
           computerHealth -= attack.damage;
 
           console.log(
-            `\n${emojis[playerChoice]} ${playerChoice.toUpperCase()} destroys ${emojis[computerChoice]} ${computerChoice.toUpperCase()}!`
+            `\n${emojis[playerChoice]} ${playerChoice.toUpperCase()} destroys ` +
+              `${emojis[computerChoice]} ${computerChoice.toUpperCase()}!`
           );
 
           if (attack.criticalHit) {
@@ -153,7 +190,8 @@ function playRound() {
           playerHealth -= attack.damage;
 
           console.log(
-            `\n${emojis[computerChoice]} ${computerChoice.toUpperCase()} destroys ${emojis[playerChoice]} ${playerChoice.toUpperCase()}!`
+            `\n${emojis[computerChoice]} ${computerChoice.toUpperCase()} destroys ` +
+              `${emojis[playerChoice]} ${playerChoice.toUpperCase()}!`
           );
 
           if (attack.criticalHit) {
@@ -167,51 +205,49 @@ function playRound() {
       showHealth();
 
       if (playerHealth <= 0) {
-        console.log("\n☠️ =======================");
-        console.log("   YOU HAVE BEEN DEFEATED");
-        console.log("===========================\n");
+        console.log("\n☠️ ===========================");
+        console.log("      YOU HAVE BEEN DEFEATED");
+        console.log("===============================\n");
 
         rl.close();
         return;
       }
 
       if (computerHealth <= 0) {
-        console.log("\n🏆 =======================");
-        console.log("      YOU WON THE WAR");
-        console.log("===========================\n");
+        console.log("\n🏆 ===========================");
+        console.log("         YOU WON THE WAR");
+        console.log("===============================\n");
 
         rl.close();
         return;
       }
 
       round++;
-
       playRound();
     }
   );
 }
 
 console.log(`
-╔══════════════════════════════════╗
-║                                  ║
-║        ⚔️ RPS: CHAOS MODE ⚔️      ║
-║                                  ║
-╚══════════════════════════════════╝
+╔════════════════════════════════════╗
+║                                    ║
+║       👻 RPS: CHAOS MODE 2 👽       ║
+║                                    ║
+╚════════════════════════════════════╝
 
-The classic game has evolved.
+Supernatural creatures have entered the war.
 
-🪨 Rock
-📄 Paper
-✂️ Scissors
-⚔️ Sword
-🔫 Gun
-🛡️ Shield
-🔮 Magic
+There are ${choices.length} fighters.
+Each fighter defeats exactly ${Math.floor(choices.length / 2)} others.
 
-Both fighters start with 100 HP.
+Both fighters start with 150 HP.
 
-Type "rules" to see what beats what.
-Type "quit" to leave the game.
+COMMANDS
+
+"weapons" — View every available fighter
+"rules"   — View the battle rules
+"quit"    — Escape the supernatural war
 `);
 
+showWeapons();
 playRound();
