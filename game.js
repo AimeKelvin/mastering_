@@ -7,6 +7,7 @@ const rl = readline.createInterface({
 
 // The order matters: each weapon beats the next 7 weapons.
 // CHAOS MODE 2: supernatural warfare
+// The order matters: each weapon beats the next 7 weapons.
 const choices = [
   "rock",
   "paper",
@@ -19,6 +20,14 @@ const choices = [
   "alien",
   "robot",
   "meteor",
+  "axe",
+  "fire",
+  "water",
+  "lightning",
+  "bow",
+  "bomb",
+  "dragon",
+  "ninja",
 ];
 
 const emojis = {
@@ -28,11 +37,19 @@ const emojis = {
   laser: "🔴",
   zombie: "🧟",
   vampire: "🧛",
-  werewolf: "🐺",
+  werewolf: "🛡🐺",
   ghost: "👻",
-  alien: "👽",
+  alien: "🔮👽",
   robot: "🤖",
   meteor: "☄️",
+  axe: "🪓",
+  fire: "🔥",
+  water: "🌊",
+  lightning: "⚡",
+  bow: "🏹",
+  bomb: "💣",
+  dragon: "🐉",
+  ninja: "🥷",
 };
 
 // Automatically creates balanced rules.
