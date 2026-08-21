@@ -6,14 +6,20 @@ const rl = readline.createInterface({
 });
 
 // The order matters: each weapon beats the next 7 weapons.
+// CHAOS MODE 2: supernatural warfare
+// The order matters: each weapon beats the next 7 weapons.
 const choices = [
   "rock",
-  "scissors",
-  "sword",
-  "gun",
   "paper",
-  "magic",
-  "shield",
+  "scissors",
+  "laser",
+  "zombie",
+  "vampire",
+  "werewolf",
+  "ghost",
+  "alien",
+  "robot",
+  "meteor",
   "axe",
   "fire",
   "water",
@@ -28,10 +34,14 @@ const emojis = {
   rock: "🪨",
   paper: "📄",
   scissors: "✂️",
-  sword: "⚔️",
-  gun: "🔫",
-  shield: "🛡️",
-  magic: "🔮",
+  laser: "🔴",
+  zombie: "🧟",
+  vampire: "🧛",
+  werewolf: "🛡🐺",
+  ghost: "👻",
+  alien: "🔮👽",
+  robot: "🤖",
+  meteor: "☄️",
   axe: "🪓",
   fire: "🔥",
   water: "🌊",
@@ -62,8 +72,8 @@ function createBattleRules() {
 
 const beats = createBattleRules();
 
-let playerHealth = 100;
-let computerHealth = 100;
+let playerHealth = 150;
+let computerHealth = 150;
 let round = 1;
 
 function getComputerChoice() {
@@ -238,22 +248,22 @@ function playRound() {
 console.log(`
 ╔════════════════════════════════════╗
 ║                                    ║
-║       ⚔️ RPS: CHAOS MODE 1 ⚔️       ║
+║       👻 RPS: CHAOS MODE 2 👽       ║
 ║                                    ║
 ╚════════════════════════════════════╝
 
-The classic game has completely lost control.
+Supernatural creatures have entered the war.
 
-There are now ${choices.length} weapons.
-Each weapon defeats exactly ${Math.floor(choices.length / 2)} others.
+There are ${choices.length} fighters.
+Each fighter defeats exactly ${Math.floor(choices.length / 2)} others.
 
-Both fighters start with 100 HP.
+Both fighters start with 150 HP.
 
 COMMANDS
 
-"weapons" — View every available weapon
-"rules"   — View what each weapon defeats
-"quit"    — Escape the battlefield
+"weapons" — View every available fighter
+"rules"   — View the battle rules
+"quit"    — Escape the supernatural war
 `);
 
 showWeapons();
